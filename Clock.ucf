@@ -1,0 +1,18 @@
+# Design constraints for target device
+
+NET "Clk_100M" LOC = V10;
+NET "Clk_100M" PERIOD = 10 ns HIGH 5ns;
+
+NET "SegmentDrivers<3>" LOC = P17;
+NET "SegmentDrivers<2>" LOC = P18;
+NET "SegmentDrivers<1>" LOC = N15;
+NET "SegmentDrivers<0>" LOC = N16;
+
+NET "SevenSegment<7>" LOC = M13;
+NET "SevenSegment<6>" LOC = L14;
+NET "SevenSegment<5>" LOC = N14;
+NET "SevenSegment<4>" LOC = M14;
+NET "SevenSegment<3>" LOC = U18;
+NET "SevenSegment<2>" LOC = U17;
+NET "SevenSegment<1>" LOC = T18;
+NET "SevenSegment<0>" LOC = T17;

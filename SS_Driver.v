@@ -1,3 +1,7 @@
+/** A module that takes the set of BCD values and drives the
+ *  seven segment display via the pins defined as outputs here.
+ **/
+
 module SS_Driver(input Clk,
                  Reset,
                  input [3:0] BCD3,
@@ -5,7 +9,7 @@ module SS_Driver(input Clk,
                  BCD1,
                  BCD0,
                  output reg [3:0] SegmentDrivers,
-                 output reg [7:0]SevenSegment);
+                 output reg [7:0] SevenSegment);
     //-----------------------------------------------------------------------------
     // Make use of a subcircuit to decode the BCD to seven-segment (SS)
     wire [6:0]SS[3:0];
@@ -30,7 +34,8 @@ module SS_Driver(input Clk,
         if (Reset) begin
             SevenSegment[6:0] <= 7’h7F;
             // All off during Reset
-            end else begin
+        end
+        else begin
             case(~SegmentDrivers)
                 // Connect the correct signals,
                 4’h1 : SevenSegment[6:0] <= ~SS[0];

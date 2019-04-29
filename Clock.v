@@ -4,11 +4,11 @@ module Clock(input Clk_100M,
     
     // Can be 27 bits wide for frequency count of 100MHz
     reg [29:0] Count;
-    reg seconds [5:0] = 6'b0;
-    reg minutesTens,
+    reg [5:0] seconds = 6'b0;
+    reg [3:0] minutesTens,
     minutesUnits,
     hoursTens,
-    hoursUnits [3:0] = 4'd0;
+    hoursUnits = 4'd0;
     
     // Initialise Delay_Reset
     wire Reset;
@@ -24,6 +24,8 @@ module Clock(input Clk_100M,
     minutesUnits,
     SegmentDrivers, SevenSegment
     );
+
+    // assign LED_PINS = seconds;
     
     always @(posedge Clk_100M) begin
         if (Count > 100000000) begin // Count > 1*frequency

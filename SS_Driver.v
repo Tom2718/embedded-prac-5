@@ -8,6 +8,7 @@ module SS_Driver(input Clk,
                  BCD2,
                  BCD1,
                  BCD0,
+					  input [1:0] Brightness,
                  output reg [3:0] SegmentDrivers,
                  output reg [7:0] SevenSegment);
     //-----------------------------------------------------------------------------
@@ -24,7 +25,14 @@ module SS_Driver(input Clk,
     always @(posedge Clk) begin
         Count                           <= Count + 1'b1;
         if (Reset) SegmentDrivers       <= 4'hE;
-        else if (&Count) SegmentDrivers <= {SegmentDrivers[2:0], SegmentDrivers[3]};
+        // else if (&Count) SegmentDrivers <= {SegmentDrivers[2:0], SegmentDrivers[3]};
+		  
+		  case(Brightness) // Decrease brightness logarithmically
+				2'b00: if (&Count) SegmentDrivers <= {SegmentDrivers[2:0], SegmentDrivers[3]};
+				2'b01: if (&(Count[15:0])) SegmentDrivers <= {SegmentDrivers[2:0], SegmentDrivers[3]};
+				2'b10: if (&(Count[14:0])) SegmentDrivers <= {SegmentDrivers[2:0], SegmentDrivers[3]};
+				2'b11: if (&(Count[13:0])) SegmentDrivers <= {SegmentDrivers[2:0], SegmentDrivers[3]};
+		  endcase
     end
     //------------------------------------------------------------------------------
     always @(*) begin

@@ -26,7 +26,9 @@ module Clock_tb;
 
 	// Inputs
 	reg Clk_100M;
-	reg button;
+	reg Reset_Button = 1'b0;
+	reg Button_Minutes = 1'b0;
+	reg Button_Hours = 1'b0;
 	reg [1:0] Slide_Switch = 2'b11; // Full brightness
 
 	// Outputs
@@ -36,7 +38,9 @@ module Clock_tb;
 	// Instantiate the Unit Under Test (UUT)
 	Clock uut (
 		.Clk_100M(Clk_100M), 
-		.button(button),
+		.Reset_Button(Reset_Button),
+		.Button_Minutes(Button_Minutes),
+		.Button_Hours(Button_Hours),
 		.Slide_Switch(Slide_Switch),
 		.SegmentDrivers(SegmentDrivers), 
 		.SevenSegment(SevenSegment)
@@ -45,16 +49,52 @@ module Clock_tb;
 	initial begin
 		// Initialize Inputs
 		Clk_100M = 0;
-		button = 0;
 
 		// Wait 100 ns for global reset to finish
 		#100;
+		Reset_Button = 1'b1;
+		#50
+		Reset_Button = 1'b0;
         
-		// Add stimulus here
-		#20
-		button = ~button;
+		// Test Minutes Button
+//		#20
+//		Button_Minutes = 1'b1;
+//		#20 
+//		Button_Minutes = 1'b0;
+//		#20
+//		Button_Minutes = 1'b1;
+//		#20 
+//		Button_Minutes = 1'b0;
+//		
+//		repeat(200) begin
+//			#250
+//			Button_Minutes = ~Button_Minutes;
+//		end
 		
-		
+		// Test Hours Button
+//		#20
+//		Button_Hours = 1'b1;
+//		#20 
+//		Button_Hours = 1'b0;
+//		#20
+//		Button_Hours = 1'b1;
+//		#20 
+//		Button_Hours = 1'b0;
+//		
+//		repeat(100) begin
+//			#250
+//			Button_Hours = ~Button_Hours;
+//		end
+
+		// Test Brightness
+//		#20
+//		Slide_Switch = 2'b11;
+//		#600000
+//		Slide_Switch = 2'b10;
+//		#1000000
+//		Slide_Switch = 2'b1;
+//		#2000000
+//		Slide_Switch = 2'b00;		
 	end
 
 	always begin

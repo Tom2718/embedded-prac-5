@@ -10,7 +10,7 @@ module Delay_Reset(input Clk,
                    output reg Reset);
     //------------------------------------------------------------------------------
     reg LocalReset;
-    reg [22:0]Count;
+    reg [18:0]Count;
     // Assume Count is null on FPGA configuration
     //------------------------------------------------------------------------------
     always @(posedge Clk) begin
@@ -33,7 +33,7 @@ module Delay_Reset(input Clk,
         end
         else begin
             // Otherwise...
-            Reset <= 1'b1;
+            Reset <= 1'b0;
             // Make sure the output signal is high
             Count <= Count + 1'b1;
             // And increment Count

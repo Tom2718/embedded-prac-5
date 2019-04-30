@@ -29,14 +29,19 @@ module Debounce(
         if (Button == 1'b1 && count == 25'b0) begin
             Set <= 1'b1;
 				count <= count + 1'b1;
-        end 
-        else if (count > 1e8/50) begin // Debounce time: 20ms
+        end
+		  else if (Set) begin
 				Set <= ~Set;
+		  end
+        else if (count > 25'd200) begin // Debounce time: 20ms; Temp: 200ns * 2
             count <= 25'b0;
         end
         else if (count > 25'b0) begin
             count <= count + 1'b1;
         end
+		  else begin
+				Set <= 1'b0;
+		  end
     end
 
 endmodule

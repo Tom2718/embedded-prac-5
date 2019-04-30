@@ -1,5 +1,7 @@
 module Clock(input wire Clk_100M,
-			    input wire button,
+			    input wire Reset_Button,
+				 input wire Button_Minutes,
+				 input wire Button_Hours,
 				 input wire [1:0] Slide_Switch,
              output [3:0] SegmentDrivers,
              output [7:0] SevenSegment,
@@ -16,11 +18,8 @@ module Clock(input wire Clk_100M,
     
     // Initialise Delay_Reset
     wire Reset;
-    // Add BTNS as a pull up button !!!!!!!!!!!
-    Delay_Reset Delay_Reset1(Clk_100M,button,Reset);
+    Delay_Reset Delay_Reset1(Clk_100M,Reset_Button,Reset);
 	 
-	 wire Button_Minutes;
-	 wire Button_Hours;
 	 wire Set_Minutes;
 	 wire Set_Hours;
 	 
@@ -34,14 +33,17 @@ module Clock(input wire Clk_100M,
     hoursUnits,
     minutesTens,
     minutesUnits,
+	 Slide_Switch,
     SegmentDrivers, SevenSegment
     );
 		
-	 // There are 
+	 // Assign seconds value in binary to LEDs
     assign LED_Pins = seconds;
     
     always @(posedge Clk_100M) begin
-        if (Count > 30'd1) begin // Count > 1*frequency
+        if (Count > 30'd1) begin // Count > 1*frequency. 200000000 = 1s
+		  
+				// Count 24h clock
             if (seconds == 6'd59) begin
                 if (minutesTens == 4'd5 && minutesUnits == 4'd9) begin
                     if (hoursTens == 4'd2 && hoursUnits == 4'd3) begin
@@ -76,36 +78,45 @@ module Clock(input wire Clk_100M,
             else begin
                 seconds <= seconds + 1'b1;
             end
-				
-				// Set minute time
-				if (Set_Minutes) begin
-					if (minutesUnits == 4'd9) begin
-						if (minutesTens == 4'd5) begin
-							minutesTens <= 4'b0;
-						end
-						else begin
-							minutesTens <= minutesTens + 1'b1;
-						end
-						minutesUnits <= 4'b0;
-					end
-					minutesUnits <= minutesUnits + 1'b1;
-				end
-				
-				// Set hour time
-				if (Set_Hours) begin
-					if (hoursUnits == 4'd9) begin
-						if (hoursTens == 4'd5) begin
-							hoursTens <= 4'b0;
-						end
-						else begin
-							hoursTens <= hoursTens + 1'b1;
-						end
-						hoursUnits <= 4'b0;
-					end
-					hoursUnits <= hoursUnits + 1'b1;
-				end
         end
         Count <= Count + 1'b1;
+		  
+		  // Set minute time
+			if (Set_Minutes) begin
+				if (minutesUnits == 4'd9) begin
+					if (minutesTens == 4'd5) begin
+						minutesTens <= 4'b0;
+						minutesUnits <= 4'b0;
+					end
+					else begin
+						minutesTens <= minutesTens + 1'b1;
+						minutesUnits <= 4'b0;
+					end
+				end
+				else begin
+					minutesUnits <= minutesUnits + 1'b1;
+				end
+			end
+			
+			// Set hour time
+			if (Set_Hours) begin
+				if (hoursTens == 4'd2) begin
+					if (hoursUnits == 4'd3) begin
+						hoursTens <= 4'b0;
+						hoursUnits <= 4'b0;
+					end
+					else begin
+						hoursUnits <= hoursUnits + 1'b1;
+					end
+				end
+				else if (hoursUnits == 4'd9) begin
+					hoursUnits <= 4'd0;
+					hoursTens <= hoursTens + 1'b1;
+				end
+				else begin
+					hoursUnits <= hoursUnits + 1'b1;
+				end
+			end
     end
 	 
 	 // Testing
@@ -113,9 +124,10 @@ module Clock(input wire Clk_100M,
 		// Test clock 
 		// $monitor("%d%d:%d%d", hoursTens, hoursUnits, minutesTens, minutesUnits);
 		
+		// Test LEDs
+		// $monitor("%b", seconds);
+		
+		// Test Buttons
+		// $monitor("%d,%d:%d,%d", hoursTens, hoursUnits, minutesTens, minutesUnits);
 	 end
-    
-    // ???
-    // assign SegmentDrivers = Count[29:26];
-    // assign SevenSegment   = Count[25:18];
 endmodule

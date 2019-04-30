@@ -20,18 +20,41 @@ module SS_Driver(input Clk,
     BCD_Decoder BCD_Decoder3(BCD3, SS[3]);
     //------------------------------------------------------------------------------
     // Counter to reduce the 100 MHz clock to 762.939 Hz (100 MHz / 2^17)
-    reg [16:0]Count;
+    reg [18:0]Count = 19'b0;
     // Scroll through the digits, switching one on at a time
     always @(posedge Clk) begin
         Count                           <= Count + 1'b1;
         if (Reset) SegmentDrivers       <= 4'hE;
-        // else if (&Count) SegmentDrivers <= {SegmentDrivers[2:0], SegmentDrivers[3]};
+//        else if (Count[0]) begin
+//				SegmentDrivers <= {SegmentDrivers[2:0], SegmentDrivers[3]};
+//				Count <= 19'b0;
+//		  end
 		  
 		  case(Brightness) // Decrease brightness logarithmically
-				2'b00: if (&Count) SegmentDrivers <= {SegmentDrivers[2:0], SegmentDrivers[3]};
-				2'b01: if (&(Count[15:0])) SegmentDrivers <= {SegmentDrivers[2:0], SegmentDrivers[3]};
-				2'b10: if (&(Count[14:0])) SegmentDrivers <= {SegmentDrivers[2:0], SegmentDrivers[3]};
-				2'b11: if (&(Count[13:0])) SegmentDrivers <= {SegmentDrivers[2:0], SegmentDrivers[3]};
+				2'b00: begin 
+					if (&Count) begin
+							SegmentDrivers <= {SegmentDrivers[2:0], SegmentDrivers[3]};
+							Count <= 19'b0;
+						end
+					end
+				2'b01: begin 
+					if (&(Count[17:0])) begin 
+							SegmentDrivers <= {SegmentDrivers[2:0], SegmentDrivers[3]};
+							Count <= 19'b0;
+						end
+					end
+				2'b10: begin
+					if (&(Count[16:0])) begin
+							SegmentDrivers <= {SegmentDrivers[2:0], SegmentDrivers[3]};
+							Count <= 19'b0;
+						end
+					end
+				2'b11: begin
+					if (&(Count[15:0])) begin
+							SegmentDrivers <= {SegmentDrivers[2:0], SegmentDrivers[3]};
+							Count <= 19'b0;
+						end
+					end
 		  endcase
     end
     //------------------------------------------------------------------------------

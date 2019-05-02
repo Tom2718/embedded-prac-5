@@ -8,7 +8,7 @@ module SS_Driver(input Clk,
                  BCD2,
                  BCD1,
                  BCD0,
-					  input [7:0] Brightness,
+                 input [7:0] Brightness,
                  output reg [3:0] SegmentDrivers,
                  output reg [7:0] SevenSegment);
     //-----------------------------------------------------------------------------
@@ -21,50 +21,23 @@ module SS_Driver(input Clk,
     //------------------------------------------------------------------------------
     // Counter to reduce the 100 MHz clock to 762.939 Hz (100 MHz / 2^17)
     reg [18:0]Count = 19'b0;
-	 // reg My_Count = 1'b0;
-	 wire pwm_value;
-	 
-	 PWM PWM_inst (
-		Clk,
-		Brightness,
-		pwm_value
-	 );
-	 
+    // reg My_Count = 1'b0;
+    wire pwm_value;
+    
+    PWM PWM_inst (
+    Clk,
+    Brightness,
+    pwm_value
+    );
+    
     // Scroll through the digits, switching one on at a time
     always @(posedge Clk) begin
-        Count                           <= Count + 1'b1;
-        if (Reset) SegmentDrivers       <= 4'hE;
-        else if (Count[0]) begin
-				SegmentDrivers <= {SegmentDrivers[2:0], SegmentDrivers[3]};
-				Count <= 19'b0;
-		  end
-		  
-//		  case(Brightness) // Decrease brightness logarithmically
-//				2'b00: begin 
-//					if (&Count) begin
-//							SegmentDrivers <= {SegmentDrivers[2:0], SegmentDrivers[3]};
-//							Count <= 19'b0;
-//						end
-//					end
-//				2'b01: begin 
-//					if (&(Count[18:0])) begin 
-//							SegmentDrivers <= {SegmentDrivers[2:0], SegmentDrivers[3]};
-//							Count <= 19'b0;
-//						end
-//					end
-//				2'b10: begin
-//					if (&(Count[16:0])) begin
-//							SegmentDrivers <= {SegmentDrivers[2:0], SegmentDrivers[3]};
-//							Count <= 19'b0;
-//						end
-//					end
-//				2'b11: begin
-//					if (&(Count[15:0])) begin
-//							SegmentDrivers <= {SegmentDrivers[2:0], SegmentDrivers[3]};
-//							Count <= 19'b0;
-//						end
-//					end
-//		  endcase
+        Count                     <= Count + 1'b1;
+        if (Reset) SegmentDrivers <= 4'hE;
+        else if (&Count) begin
+        SegmentDrivers <= {SegmentDrivers[2:0], SegmentDrivers[3]};
+        Count          <= 19'b0;
+    end
     end
     //------------------------------------------------------------------------------
     always @(*) begin
@@ -76,21 +49,21 @@ module SS_Driver(input Clk,
             // All off during Reset
         end
         else begin
-			if (pwm_value) begin
-				case(~SegmentDrivers)
-					 // Connect the correct signals,
-					 4'h1 : SevenSegment[6:0] <= ~SS[0];
-					 // depending on which digit is on at
-					 4'h2 : SevenSegment[6:0] <= ~SS[1];
-					 // this point
-					 4'h4 : SevenSegment[6:0]   <= ~SS[2];
-					 4'h8 : SevenSegment[6:0]   <= ~SS[3];
-					 default: SevenSegment[6:0] <= 7'h7F;
-				endcase
-			end
-			else begin
-				SevenSegment[6:0] <= 7'h7F;
-			end
-		 end
+            if (pwm_value) begin
+                case(~SegmentDrivers)
+                    // Connect the correct signals,
+                    4'h1 : SevenSegment[6:0] <= ~SS[0];
+                    // depending on which digit is on at
+                    4'h2 : SevenSegment[6:0] <= ~SS[1];
+                    // this point
+                    4'h4 : SevenSegment[6:0]   <= ~SS[2];
+                    4'h8 : SevenSegment[6:0]   <= ~SS[3];
+                    default: SevenSegment[6:0] <= 7'h7F;
+                endcase
+            end
+            else begin
+                SevenSegment[6:0] <= 7'h7F;
+            end
+        end
     end
 endmodule

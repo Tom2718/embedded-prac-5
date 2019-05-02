@@ -2,7 +2,7 @@ module Clock(input wire Clk_100M,
 			    input wire Reset_Button,
 				 input wire Button_Minutes,
 				 input wire Button_Hours,
-				 input wire [1:0] Slide_Switch,
+				 input wire [7:0] Slide_Switch,
              output [3:0] SegmentDrivers,
              output [7:0] SevenSegment,
 				 output [5:0] LED_Pins
@@ -28,21 +28,29 @@ module Clock(input wire Clk_100M,
     
     // Initialise SS_Driver
     SS_Driver SS_Driver1(
-    Clk_100M, Reset,
-    hoursTens,
-    hoursUnits,
-    minutesTens,
-    minutesUnits,
-	 Slide_Switch,
-    SegmentDrivers, SevenSegment
+		 Clk_100M, Reset,
+		 hoursTens,
+		 hoursUnits,
+		 minutesTens,
+		 minutesUnits,
+		 Slide_Switch,
+		 SegmentDrivers, SevenSegment
     );
 		
 	 // Assign seconds value in binary to LEDs
     assign LED_Pins = seconds;
     
     always @(posedge Clk_100M) begin
+			if (Reset) begin
+				hoursTens    <= 4'd0;
+				hoursUnits   <= 4'd0;
+				minutesTens  <= 4'd0;
+				minutesUnits <= 4'd0;
+				seconds      <= 6'b0;
+			end
+	 
         if (Count > 30'd1) begin // Count > 1*frequency. 200000000 = 1s
-		  
+				Count <= 30'b0;
 				// Count 24h clock
             if (seconds == 6'd59) begin
                 if (minutesTens == 4'd5 && minutesUnits == 4'd9) begin
@@ -79,7 +87,9 @@ module Clock(input wire Clk_100M,
                 seconds <= seconds + 1'b1;
             end
         end
-        Count <= Count + 1'b1;
+		  else begin
+				Count <= Count + 1'b1;
+		  end
 		  
 		  // Set minute time
 			if (Set_Minutes) begin

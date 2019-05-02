@@ -29,7 +29,7 @@ module Clock_tb;
 	reg Reset_Button = 1'b0;
 	reg Button_Minutes = 1'b0;
 	reg Button_Hours = 1'b0;
-	reg [1:0] Slide_Switch = 2'b11; // Full brightness
+	reg [7:0] Slide_Switch = 8'hFF; // Full brightness
 
 	// Outputs
 	wire [3:0] SegmentDrivers;
@@ -88,13 +88,17 @@ module Clock_tb;
 
 		// Test Brightness
 //		#20
-//		Slide_Switch = 2'b11;
-//		#600000
-//		Slide_Switch = 2'b10;
-//		#1000000
-//		Slide_Switch = 2'b1;
-//		#2000000
-//		Slide_Switch = 2'b00;		
+//		Slide_Switch = 8'hFF;
+//		#100000
+//		Slide_Switch = 8'b01111111;
+//		#100000
+//		Slide_Switch = 8'b00111111;
+//		#100000
+//		Slide_Switch = 8'hF;
+//		#100000
+//		Slide_Switch = 8'h8;
+//		#100000
+//		Slide_Switch = 8'h0;		
 	end
 
 	always begin

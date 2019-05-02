@@ -24,8 +24,18 @@ NET "LED_Pins<2>" LOC = V15 | TIG;
 NET "LED_Pins<1>" LOC = M11 | TIG;
 NET "LED_Pins<0>" LOC = N11 | TIG;
 
-NET "button" LOC = C4 | TIG;
+NET "Reset_Button" LOC = C4 | TIG;
+NET "Button_Minutes" LOC = D9 | TIG;
+NET "Button_Hours" LOC = A8 | TIG;
 
-NET "Slide_Switch<1>" LOC = T10 | TIG;
-NET "Slide_Switch<0>" LOC = T9 | TIG;
+NET "Slide_Switch<7>" LOC = T10 | TIG;
+NET "Slide_Switch<6>" LOC = T9 | TIG;
+NET "Slide_Switch<5>" LOC = V9 | TIG;
+NET "Slide_Switch<4>" LOC = M8 | TIG;
+NET "Slide_Switch<3>" LOC = N8 | TIG;
+NET "Slide_Switch<2>" LOC = U8 | TIG;
+NET "Slide_Switch<1>" LOC = V8 | TIG;
+NET "Slide_Switch<0>" LOC = T5 | TIG;
+
+
 
